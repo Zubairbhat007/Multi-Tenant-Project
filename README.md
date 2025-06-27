@@ -3,8 +3,8 @@
 Create a `.env` file in the root folder with:
 
 ```
-PORT=3000
-JWT_SECRET=yourSuperSecretKey
+PORT= ""
+JWT_SECRET= ""
 ```
 
 ### ✅ 4. Simulate Subdomains (Local Setup)
