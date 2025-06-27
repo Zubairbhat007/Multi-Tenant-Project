@@ -1,3 +1,9 @@
+Getting Started
+### ✅ 1. Clone the repository.
+
+### ✅ 2. Install dependencies:
+npm install
+
 ### ✅ 3. Setup Environment Variables
 
 Create a `.env` file in the root folder with:
