@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secure Page</title>
+</head>
+<body>
+  <h1 id="secure-title">Loading...</h1>
+  <button id="getDataBtn">Get Protected Info</button>
+
+  <script>
+  const tenant = window.location.hostname.split('.')[0];
+
+  const checkToken = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Token removed! Redirecting to login...');
+      window.location.href = '/auth.html';
+    }
+  };
+
+  // Run every second to check for token presence
+  setInterval(checkToken, 1000);
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Not authenticated! Redirecting to login...');
+    window.location.href = '/auth.html';
+  }
+
+  document.getElementById('secure-title').innerText = `Secure Page (Tenant: ${tenant})`;
+
+  document.getElementById('getDataBtn').addEventListener('click', async () => {
+    const res = await fetch('/secure', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      document.getElementById('secure-title').innerText = `Secure Protected Page for tenant: ${tenant}`;
+    } else {
+      alert(data.message || 'Access denied');
+      window.location.href = '/auth.html';
+    }
+  });
+</script>
+
+</body>
+</html>

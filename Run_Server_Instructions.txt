@@ -1,0 +1,85 @@
+  How to Run the Server Locally
+
+  1. Install Dependencies
+
+Open terminal in the project directory and run:
+
+npm install
+
+---
+
+ 2. Setup `.env` File
+
+In the root folder, create a `.env` file and add:
+
+```env
+PORT=3000
+JWT_SECRET=yourSuperSecretKey
+```
+
+---
+
+ 3. Edit `hosts` File to Add Subdomains
+
+To simulate multitenancy via subdomains locally:
+
+ Windows:
+Edit: `C:\Windows\System32\drivers\etc\hosts`
+
+ macOS/Linux:
+Edit: `/etc/hosts`
+
+**Add these lines at the end of the file:**
+
+```
+127.0.0.1 client1.localhost
+127.0.0.1 client2.localhost
+```
+
+Save the file ( may need admin rights).
+
+---
+
+ 4. Start the Server
+
+In terminal, run:
+
+node server.js
+
+
+We will see:
+
+```
+Server running on port 3000
+Running app on :-
+→ http://client1.localhost:3000/auth.html
+→ http://client2.localhost:3000/auth.html
+```
+
+---
+
+5. Use in Browser
+
+Now open the following URLs in browser to test:
+
+- `http://client1.localhost:3000/auth.html` — Register/Login as Client 1
+- `http://client2.localhost:3000/auth.html` — Register/Login as Client 2
+
+Each tenant will have isolated authentication and database.
+
+
+
+Full Overview of this project:-
+
+This project is a multitenant authentication system built using Node.js, Express, and MongoDB, designed to support Software-as-a-Service (SaaS) applications where each tenant (client or organization) operates in complete isolation.
+Each tenant connects to its own MongoDB database, selected dynamically based on the subdomain used to access the application (e.g., client1.localhost, client2.localhost).
+This ensures that user data for each client is stored and managed separately, promoting strong data isolation and security.
+Authentication is implemented using JSON Web Tokens (JWT), a stateless and secure mechanism that allows users to log in and receive a signed token that includes their user ID and tenant ID. 
+This token is stored in the browser (e.g., in localStorage) and sent with every request to protected routes. 
+The server verifies the token, checks that it matches the correct tenant, and then allows or denies access. 
+This ensures that users from one tenant cannot use their token to access resources from another tenant, maintaining strict security boundaries.
+The system also includes a token revocation mechanism to handle compromised tokens.
+If a token needs to be invalidated or removed (e.g., due to a logout or security breach), it can be added to a blacklist so it’s no longer accepted by the server—even if it hasn't expired yet. 
+The frontend consists of simple HTML pages for registration, login, and a protected page that can only be accessed by authenticated users. When users click “Get Protected Info,” the server checks their JWT and tenant before displaying secure content, such as: “Secure Protected Page for tenant: client1.” 
+This setup demonstrates not only how to build a scalable and isolated authentication system for multiple tenants, but also how to enforce strict security and data privacy between them.
+
